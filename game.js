@@ -12,6 +12,7 @@ $(document).keypress(function () {
     nextSequence();
   }
 });
+// initialize the game or reset the game
 function initGame() {
   level = 0;
   gamePattern = [];
@@ -29,7 +30,7 @@ $(".btn").click(function () {
   playSound(userChosenColor);
 
   // check userClickedPattern against gamePattern
-
+  // if wrong then stop the game early
   if (
     gamePattern
       .slice(0, userClickedPattern.length)
@@ -42,13 +43,12 @@ $(".btn").click(function () {
     }, 200);
     $("h1").text("Game Over, Press Any Key to Restart");
     initGame();
-  } else if (gamePattern.length === userClickedPattern.length) {
+  } // if nothing wrong and all patterns are the same then continue to the next level
+  else if (gamePattern.length === userClickedPattern.length) {
     nextSequence();
     // reset the userClickedPattern array
     userClickedPattern = [];
   }
-  console.log("userClickedPattern: " + userClickedPattern);
-  console.log("gamePattern: " + gamePattern);
 });
 
 // function to generate a random number between 0 and 3
