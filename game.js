@@ -1,20 +1,23 @@
 var buttonColors = ["red", "blue", "green", "yellow"];
 var userClickedPattern = [];
-// add a random color from the buttonColors array to the randomChosenColor variable
-var randomChosenColor = buttonColors[nextSequence()];
 var gamePattern = [];
-// then add the randomChosenColor to the end of the gamePattern array
-gamePattern.push(randomChosenColor);
 // detect when any of the buttons are clicked
 var isPlaying = false;
 // keep track of the level
 var level = 0;
+
+// detect when any of the buttons are clicked
 $(".btn").click(function () {
   var userChosenColor = $(this).attr("id");
   // add the userChosenColor to the end of the userClickedPattern array
   userClickedPattern.push(userChosenColor);
   // animate the button that got pressed
   animatePress(userChosenColor);
+  // play the sound of the button that got pressed
+  playSound(userChosenColor);
+  console.log("user: " + userClickedPattern);
+  console.log("game: " + gamePattern);
+  nextSequence();
 });
 
 // press a keyboard key to start
@@ -29,9 +32,19 @@ $(document).keypress(function () {
 // function to generate a random number between 0 and 3
 function nextSequence() {
   var randomNumber = Math.floor(Math.random() * 4);
+  // add a random color from the buttonColors array to the randomChosenColor variable
+  var randomChosenColor = buttonColors[randomNumber];
+  // add a flash animation to the button with the same id as the randomChosenColor
+  setTimeout(function () {
+    playSound(randomChosenColor);
+    $("#" + randomChosenColor)
+      .fadeOut(100)
+      .fadeIn(100);
+  }, 750);
 
+  // then add the randomChosenColor to the end of the gamePattern array
+  gamePattern.push(randomChosenColor);
   level++;
-  return randomNumber;
 }
 // function to play the sound of the button that got pressed
 function playSound(name) {
