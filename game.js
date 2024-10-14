@@ -9,11 +9,15 @@ var level = 0;
 $(document).keypress(function () {
   if (!isPlaying) {
     isPlaying = true;
-    $("h1").text("Level " + level);
     nextSequence();
   }
 });
-
+function initGame() {
+  level = 0;
+  gamePattern = [];
+  userClickedPattern = [];
+  isPlaying = false;
+}
 // detect when any of the buttons are clicked
 $(".btn").click(function () {
   var userChosenColor = $(this).attr("id");
@@ -29,14 +33,22 @@ $(".btn").click(function () {
   if (
     gamePattern
       .slice(0, userClickedPattern.length)
-      .every((value, index) => value == userClickedPattern[index])
+      .every((value, index) => value !== userClickedPattern[index])
   ) {
-    console.log("success");
-  } else {
-    console.log("wrong");
+    playSound("wrong");
+    $("body").addClass("game-over");
+    setTimeout(function () {
+      $("body").removeClass("game-over");
+    }, 200);
+    $("h1").text("Game Over, Press Any Key to Restart");
+    initGame();
+  } else if (gamePattern.length === userClickedPattern.length) {
+    nextSequence();
+    // reset the userClickedPattern array
+    userClickedPattern = [];
   }
-
-  nextSequence();
+  console.log("userClickedPattern: " + userClickedPattern);
+  console.log("gamePattern: " + gamePattern);
 });
 
 // function to generate a random number between 0 and 3
@@ -52,6 +64,7 @@ function nextSequence() {
       .fadeIn(100);
   }, 750);
 
+  $("h1").text("Level " + level);
   // then add the randomChosenColor to the end of the gamePattern array
   gamePattern.push(randomChosenColor);
   level++;
