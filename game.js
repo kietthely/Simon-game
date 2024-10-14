@@ -5,6 +5,14 @@ var gamePattern = [];
 var isPlaying = false;
 // keep track of the level
 var level = 0;
+// press a keyboard key to start
+$(document).keypress(function () {
+  if (!isPlaying) {
+    isPlaying = true;
+    $("h1").text("Level " + level);
+    nextSequence();
+  }
+});
 
 // detect when any of the buttons are clicked
 $(".btn").click(function () {
@@ -15,18 +23,20 @@ $(".btn").click(function () {
   animatePress(userChosenColor);
   // play the sound of the button that got pressed
   playSound(userChosenColor);
-  console.log("user: " + userClickedPattern);
-  console.log("game: " + gamePattern);
-  nextSequence();
-});
 
-// press a keyboard key to start
-$(document).keypress(function () {
-  if (!isPlaying) {
-    isPlaying = true;
-    $("h1").text("Level " + level);
-    nextSequence();
+  // check userClickedPattern against gamePattern
+
+  if (
+    gamePattern
+      .slice(0, userClickedPattern.length)
+      .every((value, index) => value == userClickedPattern[index])
+  ) {
+    console.log("success");
+  } else {
+    console.log("wrong");
   }
+
+  nextSequence();
 });
 
 // function to generate a random number between 0 and 3
